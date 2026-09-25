@@ -1,0 +1,62 @@
+@import "tailwindcss";
+
+:root {
+  --color-primary: #1b7a3d;
+  --color-primary-dark: #146530;
+  --color-accent-orange: #f5a623;
+  --color-accent-lime: #8dc63f;
+  --color-accent-yellow: #c4d82e;
+  --color-accent-blue: #29abe2;
+  --color-bg: #ffffff;
+  --color-bg-subtle: #f5f7f5;
+  --color-text: #1a1a1a;
+  --color-text-muted: #6b7280;
+  --color-border: #e2e5e2;
+  --font-sans: "Geist", "Segoe UI", sans-serif;
+}
+
+@theme {
+  --color-primary: var(--color-primary);
+  --color-primary-dark: var(--color-primary-dark);
+  --color-accent-orange: var(--color-accent-orange);
+  --color-accent-lime: var(--color-accent-lime);
+  --color-accent-yellow: var(--color-accent-yellow);
+  --color-accent-blue: var(--color-accent-blue);
+  --color-bg: var(--color-bg);
+  --color-bg-subtle: var(--color-bg-subtle);
+  --color-text: var(--color-text);
+  --color-text-muted: var(--color-text-muted);
+  --color-border: var(--color-border);
+  --font-sans: var(--font-sans);
+}
+
+html {
+  color-scheme: light;
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+a,
+span {
+  letter-spacing: normal;
+}
+
+a {
+  text-decoration: none;
+}

@@ -1,0 +1,3 @@
+SPKM Test Installer
+This is a placeholder installer file used for local download tracking validation.
+Version: v1.0.0
