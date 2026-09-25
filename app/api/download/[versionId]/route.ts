@@ -1,6 +1,7 @@
 import crypto from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 
+import { getRequiredEnv } from "@/lib/env";
 import { prisma } from "@/lib/prisma";
 
 function detectPlatform(userAgent: string | null): string | null {
@@ -45,9 +46,10 @@ export async function GET(
   const userAgent = request.headers.get("user-agent");
   const referrer = request.headers.get("referer");
   const platform = detectPlatform(userAgent);
+  const downloadHashSalt = getRequiredEnv("DOWNLOAD_HASH_SALT");
   const ipHash = crypto
     .createHash("sha256")
-    .update(`${forwardedFor}${process.env.DOWNLOAD_HASH_SALT ?? "spkm-local-dev"}`)
+    .update(`${forwardedFor}${downloadHashSalt}`)
     .digest("hex");
 
   await prisma.downloadEvent.create({

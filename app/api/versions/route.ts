@@ -1,33 +1,24 @@
 import { put } from "@vercel/blob";
-import { mkdir, writeFile } from "node:fs/promises";
-import { join } from "node:path";
 import { NextResponse } from "next/server";
 
 import { auth } from "@/auth";
+import { getRequiredEnv } from "@/lib/env";
 import { prisma } from "@/lib/prisma";
 
 const APP_SLUG = "spkm";
 
 async function uploadFileToStorage(file: File, versionTag: string) {
   const safeName = `${versionTag.replace(/[^a-zA-Z0-9.-]+/g, "-").toLowerCase() || "spkm-version"}.apk`;
+  const blobToken = getRequiredEnv("BLOB_READ_WRITE_TOKEN");
 
-  if (process.env.BLOB_READ_WRITE_TOKEN && process.env.BLOB_READ_WRITE_TOKEN !== "local-dev-placeholder") {
-    const blob = await put(`spkm/${safeName}`, file, {
-      access: "public",
-      contentType: file.type || "application/vnd.android.package-archive",
-      addRandomSuffix: false,
-    });
+  const blob = await put(`spkm/${safeName}`, file, {
+    access: "public",
+    token: blobToken,
+    contentType: file.type || "application/vnd.android.package-archive",
+    addRandomSuffix: false,
+  });
 
-    return blob.url;
-  }
-
-  const uploadDirectory = join(process.cwd(), "public", "files", "uploads");
-  await mkdir(uploadDirectory, { recursive: true });
-
-  const destinationPath = join(uploadDirectory, safeName);
-  await writeFile(destinationPath, Buffer.from(await file.arrayBuffer()));
-
-  return `/files/uploads/${safeName}`;
+  return blob.url;
 }
 
 export async function POST(request: Request) {

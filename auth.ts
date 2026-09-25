@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { getRequiredAuthSecret, getRequiredAuthUrl } from "@/lib/env";
 import { compare } from "bcryptjs";
 import NextAuth, { type DefaultSession } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
@@ -16,8 +17,16 @@ declare module "next-auth" {
   }
 }
 
+const authSecret = getRequiredAuthSecret();
+const nextAuthUrl = getRequiredAuthUrl();
+
+if (!process.env.NEXTAUTH_URL) {
+  process.env.NEXTAUTH_URL = nextAuthUrl;
+}
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   trustHost: true,
+  secret: authSecret,
   session: {
     strategy: "jwt",
   },

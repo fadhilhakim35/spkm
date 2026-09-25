@@ -1,6 +1,11 @@
 import { PrismaClient } from "@prisma/client";
 import { hashSync } from "bcryptjs";
 
+import { getRequiredEnv } from "@/lib/env";
+
+const seedAdminEmail = getRequiredEnv("SEED_ADMIN_EMAIL");
+const seedAdminPassword = getRequiredEnv("SEED_ADMIN_PASSWORD");
+
 const prisma = new PrismaClient();
 
 async function main() {
@@ -18,14 +23,14 @@ async function main() {
   });
 
   await prisma.adminUser.upsert({
-    where: { email: "admin@spkm.local" },
+    where: { email: seedAdminEmail },
     update: {
-      passwordHash: hashSync("admin123", 10),
+      passwordHash: hashSync(seedAdminPassword, 10),
       role: "admin",
     },
     create: {
-      email: "admin@spkm.local",
-      passwordHash: hashSync("admin123", 10),
+      email: seedAdminEmail,
+      passwordHash: hashSync(seedAdminPassword, 10),
       role: "admin",
     },
   });
