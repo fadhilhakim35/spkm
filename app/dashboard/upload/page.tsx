@@ -1,5 +1,6 @@
 "use client";
 
+import { upload } from "@vercel/blob/client";
 import { CheckCircle2, Loader2, UploadCloud } from "lucide-react";
 import { FormEvent, useState } from "react";
 
@@ -14,21 +15,39 @@ export default function UploadVersionPage() {
     setSuccessMessage("");
     setErrorMessage("");
 
-    const formData = new FormData(event.currentTarget);
+    const fileInput = event.currentTarget.elements.namedItem("file");
+    const file = fileInput instanceof HTMLInputElement ? fileInput.files?.[0] : null;
+    const versionTag = String(new FormData(event.currentTarget).get("versionTag") ?? "").trim();
+    const changelog = String(new FormData(event.currentTarget).get("changelog") ?? "").trim();
+    const platform = String(new FormData(event.currentTarget).get("platform") ?? "android").trim() || "android";
 
     try {
-      const response = await fetch("/api/versions", {
-        method: "POST",
-        body: formData,
-      });
-
-      const payload = await response.json();
-
-      if (!response.ok) {
-        throw new Error(payload.error || "Upload gagal.");
+      if (!(file instanceof File)) {
+        throw new Error("File APK wajib diunggah.");
       }
 
-      setSuccessMessage(`Versi ${payload.version.versionTag} berhasil diunggah dan dijadikan rilis terbaru.`);
+      if (!versionTag) {
+        throw new Error("Version tag wajib diisi.");
+      }
+
+      if (!/\.apk$/i.test(file.name)) {
+        throw new Error("File harus berformat .apk.");
+      }
+
+      if (file.size > 50 * 1024 * 1024) {
+        throw new Error("Ukuran file maksimal 50MB.");
+      }
+
+      const safeVersionTag = versionTag.replace(/[^a-zA-Z0-9.-]+/g, "-").toLowerCase() || "spkm-version";
+
+      await upload(`${safeVersionTag}.apk`, file, {
+        access: "public",
+        handleUploadUrl: "/api/upload",
+        clientPayload: JSON.stringify({ versionTag, changelog, platform }),
+        contentType: file.type || "application/vnd.android.package-archive",
+      });
+
+      setSuccessMessage(`Versi ${versionTag} berhasil diunggah dan dijadikan rilis terbaru.`);
 
       const form = event.currentTarget;
       if (form) {
