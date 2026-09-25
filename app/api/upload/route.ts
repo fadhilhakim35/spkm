@@ -14,7 +14,7 @@ export async function POST(request: Request) {
     const result = await handleUpload({
       body,
       request,
-      async onBeforeGenerateToken({ pathname, clientPayload }) {
+      async onBeforeGenerateToken( pathname, clientPayload ) {
         const session = await auth();
 
         if (!session?.user || session.user.role !== "admin") {
