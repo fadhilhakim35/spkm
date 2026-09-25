@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, BadgeCheck, Download, ShieldCheck, Smartphone, Sparkles } from "lucide-react";
+import { ArrowRight, BadgeCheck, Download, Smartphone, Sparkles } from "lucide-react";
 
 import { prisma } from "@/lib/prisma";
 
@@ -34,7 +34,7 @@ export default async function Home() {
       <section className="mx-auto max-w-6xl px-6 py-8 lg:px-8 lg:py-10">
         <nav className="mb-14 flex items-center justify-between">
           <Link href="/" className="text-lg font-semibold tracking-[0.08em] text-[var(--color-primary)]">
-            SPKM
+            SPK Mobile
           </Link>
           <div className="flex items-center gap-6 text-sm text-[var(--color-text-muted)]">
             <Link href="#changelog" className="transition hover:text-[var(--color-primary)]">
@@ -69,7 +69,7 @@ export default async function Home() {
                 className="inline-flex items-center gap-2 rounded-lg bg-[var(--color-primary)] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[var(--color-primary-dark)]"
               >
                 <Download className="h-4 w-4" strokeWidth={2} />
-                Download SPK Mobile Terbaru
+                Download
               </a>
               <Link
                 href="/versions"
@@ -91,62 +91,16 @@ export default async function Home() {
             </div>
           </div>
 
-          <div className="relative">
-            <div className="absolute -left-6 top-10 h-32 w-32 rounded-full bg-[var(--color-accent-lime)]/20 blur-2xl" />
-            <div className="relative overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-subtle)] p-4 shadow-[0_1px_2px_rgba(0,0,0,0.05)]">
-              <div className="mb-4 flex items-center justify-between">
-                <div className="inline-flex items-center gap-2 text-xs font-medium uppercase tracking-[0.18em] text-[var(--color-text-muted)]">
-                  <ShieldCheck className="h-3.5 w-3.5 text-[var(--color-primary)]" strokeWidth={2} />
-                  Status aplikasi
-                </div>
-                <span className="rounded-full border border-[var(--color-border)] bg-white px-2 py-1 text-[11px] font-semibold text-[var(--color-primary)]">
-                  {versionLabel}
-                </span>
-              </div>
-
-              <div className="rounded-xl border border-[var(--color-border)] bg-white p-4">
-                <div className="flex items-center justify-between border-b border-[var(--color-border)] pb-3">
-                  <div>
-                    <p className="text-[11px] uppercase tracking-[0.18em] text-[var(--color-text-muted)]">
-                      Dashboard
-                    </p>
-                    <h2 className="mt-1 text-xl font-semibold text-[var(--color-text)]">SPK Mobile</h2>
-                  </div>
-                  <div className="h-10 w-10 rounded-lg bg-[var(--color-primary)]/10 p-2 text-[var(--color-primary)]">
-                    <Smartphone className="h-full w-full" strokeWidth={2} />
-                  </div>
-                </div>
-
-                <div className="mt-4 space-y-3">
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="rounded-lg bg-[var(--color-bg-subtle)] p-3">
-                      <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--color-text-muted)]">Hari ini</p>
-                      <p className="mt-2 text-2xl font-bold text-[var(--color-text)]">24</p>
-                    </div>
-                    <div className="rounded-lg bg-[var(--color-bg-subtle)] p-3">
-                      <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--color-text-muted)]">Selesai</p>
-                      <p className="mt-2 text-2xl font-bold text-[var(--color-primary)]">18</p>
-                    </div>
-                  </div>
-
-                  <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-subtle)] p-3">
-                    <div className="mb-2 flex items-center justify-between text-[11px] uppercase tracking-[0.18em] text-[var(--color-text-muted)]">
-                      <span>Aktivitas</span>
-                      <span>Baru</span>
-                    </div>
-                    <div className="space-y-2">
-                      <div className="h-2.5 rounded-full bg-[var(--color-border)]">
-                        <div className="h-2.5 w-[72%] rounded-full bg-[var(--color-primary)]" />
-                      </div>
-                      <div className="h-2.5 rounded-full bg-[var(--color-border)]">
-                        <div className="h-2.5 w-[54%] rounded-full bg-[var(--color-accent-orange)]" />
-                      </div>
-                      <div className="h-2.5 rounded-full bg-[var(--color-border)]">
-                        <div className="h-2.5 w-[85%] rounded-full bg-[var(--color-accent-lime)]" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
+          <div className="relative mx-auto w-full max-w-[400px]">
+            <div className="absolute inset-y-6 left-10 right-10 -z-10 rounded-[1.3rem] bg-[var(--color-primary)]/8 blur-xl" />
+            <div className="absolute inset-x-14 top-10 bottom-10 -z-10 rounded-[1.8rem] bg-[var(--color-accent-lime)]/10 blur-[32px]" />
+            <div className="relative overflow-hidden rounded-[16px] bg-transparent">
+              <div className="relative aspect-[4/5] w-full overflow-hidden bg-transparent">
+                <img
+                  src="/images/spkm-hero.webp"
+                  alt="Tampilan aplikasi SPK Mobile"
+                  className="h-full w-full object-contain drop-shadow-[0_22px_50px_rgba(31,57,140,0.14)]"
+                />
               </div>
             </div>
           </div>
