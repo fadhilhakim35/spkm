@@ -129,7 +129,12 @@ export default function UploadVersionPage() {
         form.reset();
       }
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Upload gagal.";
+      const rawMessage = error instanceof Error ? error.message : "Upload gagal.";
+      const isBlobConfigError =
+        /CORS|Access-Control-Allow-Origin|vercel.com\/api\/blob|Failed to fetch|Failed to retrieve the client token/i.test(rawMessage);
+      const message = isBlobConfigError
+        ? "Upload gagal karena konfigurasi Vercel Blob tidak valid. Pastikan BLOB_READ_WRITE_TOKEN atau VERCEL_OIDC_TOKEN + BLOB_STORE_ID sudah benar di Vercel, dan hindari endpoint blob default yang memicu CORS."
+        : rawMessage;
 
       setToastMode("error");
       toastModeRef.current = "error";
