@@ -52,13 +52,16 @@ export async function GET(
     .update(`${forwardedFor}${downloadHashSalt}`)
     .digest("hex");
 
-  const duplicateWindowStart = new Date(Date.now() - 10 * 60 * 1000);
+  const cookieName = `spkm_download_${version.id}`;
+  const cookieValue = request.cookies.get(cookieName)?.value;
+  const now = Date.now();
+  const cookieWindowMs = 60 * 1000;
+  const duplicateWindowStart = new Date(now - cookieWindowMs);
 
   const recentDownload = await prisma.downloadEvent.findFirst({
     where: {
       versionId: version.id,
       ipHash,
-      userAgent: userAgent ?? null,
       createdAt: {
         gte: duplicateWindowStart,
       },
@@ -68,7 +71,10 @@ export async function GET(
     },
   });
 
-  if (!recentDownload) {
+  const isDuplicateByCookie =
+    typeof cookieValue === "string" && !Number.isNaN(Number(cookieValue)) && Number(cookieValue) > now - cookieWindowMs;
+
+  if (!recentDownload && !isDuplicateByCookie) {
     await prisma.downloadEvent.create({
       data: {
         versionId: version.id,
@@ -81,6 +87,17 @@ export async function GET(
   }
 
   const redirectUrl = resolveDownloadUrl(version.fileUrl, request.nextUrl.origin);
+  const response = NextResponse.redirect(redirectUrl, 302);
 
-  return NextResponse.redirect(redirectUrl, 302);
+  if (!isDuplicateByCookie) {
+    response.cookies.set(cookieName, String(now), {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      path: "/",
+      maxAge: 60,
+    });
+  }
+
+  return response;
 }
