@@ -57,6 +57,7 @@ export async function POST(request: Request) {
     const result = await handleUpload({
       body,
       request,
+      token: process.env.BLOB_READ_WRITE_TOKEN,
       async onBeforeGenerateToken(pathname, clientPayload) {
         await requireAdminSession();
 
@@ -98,7 +99,7 @@ export async function POST(request: Request) {
         };
       },
       async onUploadCompleted({ blob, tokenPayload }) {
-        await requireAdminSession();
+        // await requireAdminSession();
 
         const payload = parseUploadMetadata(tokenPayload);
         const versionTag = String(payload.versionTag ?? "").trim();
