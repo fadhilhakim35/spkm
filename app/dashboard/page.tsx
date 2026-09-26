@@ -169,6 +169,7 @@ export default async function DashboardPage() {
                       </span>
                       <Link
                         href={`/api/download/${version.id}`}
+                        prefetch={false}
                         className="inline-flex items-center gap-2 rounded-lg bg-[var(--color-primary)] px-3 py-2 text-xs font-semibold text-white transition hover:bg-[var(--color-primary-dark)]"
                       >
                         <Download className="h-3.5 w-3.5" strokeWidth={2} />

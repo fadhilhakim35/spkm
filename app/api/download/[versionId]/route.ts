@@ -52,15 +52,33 @@ export async function GET(
     .update(`${forwardedFor}${downloadHashSalt}`)
     .digest("hex");
 
-  await prisma.downloadEvent.create({
-    data: {
+  const duplicateWindowStart = new Date(Date.now() - 10 * 60 * 1000);
+
+  const recentDownload = await prisma.downloadEvent.findFirst({
+    where: {
       versionId: version.id,
       ipHash,
       userAgent: userAgent ?? null,
-      referrer: referrer ?? null,
-      platform,
+      createdAt: {
+        gte: duplicateWindowStart,
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
     },
   });
+
+  if (!recentDownload) {
+    await prisma.downloadEvent.create({
+      data: {
+        versionId: version.id,
+        ipHash,
+        userAgent: userAgent ?? null,
+        referrer: referrer ?? null,
+        platform,
+      },
+    });
+  }
 
   const redirectUrl = resolveDownloadUrl(version.fileUrl, request.nextUrl.origin);
 
